@@ -1,17 +1,31 @@
 #نفس الفايل darkatlas_base.py
 
-# from sqlalchemy import create_engine
-# from sqlalchemy.orm import declarative_base
-# from sqlalchemy.orm import sessionmaker
+# src/model/database.py
 
-# from src.helper.config import settings
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    create_async_engine,
+)
 
-# engine = create_engine(settings.DATABASE_URL)
+from sqlalchemy.orm import sessionmaker
 
-# SessionLocal = sessionmaker(
-#     autocommit=False,
-#     autoflush=False,
-#     bind=engine
-# )
+from src.helper.config import get_settings
 
-# Base = declarative_base()
+
+settings = get_settings()
+
+engine = create_async_engine(
+    settings.DATABASE_URL,
+    echo=False,
+)
+
+AsyncSessionLocal = sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
+
+
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        yield session

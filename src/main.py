@@ -25,5 +25,5 @@ async def startup_span():
 async def shutdown_span():
     await app.db_engine.dispose()
 
-app.add_event_handler("startup", startup_span)
-app.add_event_handler("shutdown", shutdown_span)
+# app.add_event_handler("startup", startup_span)
+# app.add_event_handler("shutdown", shutdown_span)
