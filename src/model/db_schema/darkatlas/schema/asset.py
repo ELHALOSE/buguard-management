@@ -4,9 +4,12 @@ from sqlalchemy import Column
 from sqlalchemy import String
 from sqlalchemy import DateTime
 from sqlalchemy import JSON
-
+from ..enums.AssetStatusEnum import AssetStatus
+from ..enums.AssetTypeEnum import AssetType
+from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.sql import func
 from .darkatlas_base import SQLAlchemyBase 
+from sqlalchemy.orm import relationship
 
 class Asset(SQLAlchemyBase):
     __tablename__ = "assets"
@@ -17,7 +20,7 @@ class Asset(SQLAlchemyBase):
         default=lambda: str(uuid.uuid4())
     )
 
-    type = Column(String, nullable=False)
+    type = Column(SQLEnum(AssetType), nullable=False)
 
     value = Column(
         String,
@@ -26,9 +29,9 @@ class Asset(SQLAlchemyBase):
     )
 
     status = Column(
-        String,
+        SQLEnum(AssetStatus),
         nullable=False,
-        default="active"
+        default=AssetStatus.ACTIVE
     )
 
     source = Column(String)
@@ -46,3 +49,20 @@ class Asset(SQLAlchemyBase):
         DateTime(timezone=True),
         server_default=func.now()
     )
+
+
+
+outgoing_relationships = relationship(
+    "AssetRelationship",
+    foreign_keys="AssetRelationship.source_asset_id",
+    back_populates="source_asset"
+)
+
+incoming_relationships = relationship(
+    "AssetRelationship",
+    foreign_keys="AssetRelationship.target_asset_id",
+    back_populates="target_asset"
+)
+
+
+

@@ -2,12 +2,14 @@ from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from src.helper.config import get_settings
+from src.routes.data import router as asset_router
 
 
 app = FastAPI(
     title="DarkAtlas Asset Management",
     version="1.0.0"
 )
+
 
 
 @app.on_event("startup")
@@ -21,9 +23,10 @@ async def startup_span():
     )
 
 
+
+
 @app.on_event("shutdown")
 async def shutdown_span():
     await app.db_engine.dispose()
 
-# app.add_event_handler("startup", startup_span)
-# app.add_event_handler("shutdown", shutdown_span)
+app.include_router(asset_router)
