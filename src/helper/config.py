@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PORT: int
 
-
+    GOOGLE_API_KEY: str
 
     class Config:
         env_file = ".env"

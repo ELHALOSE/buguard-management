@@ -10,4 +10,6 @@ psycopg2-binary
 langchain 
 langchain-openai 
 openai
-
+langchain-google-genai
+langchain-core
+python-dotenv

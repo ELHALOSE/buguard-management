@@ -1,20 +1,17 @@
-from fastapi import APIRouter
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.model.database import get_db
-
-from src.model.AssetServiceLayer import AssetService
-
 from src.routes.schema.asset import (
     AssetCreate,
     AssetResponse
 )
 
-router = APIRouter(
-    prefix="/assets",
-    tags=["Assets"]
-)
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List
+
+from src.model.database import get_db
+from src.routes.schema.asset import AssetImportSchema
+from src.model.AssetServiceLayer import AssetService
+
+router = APIRouter(prefix="/api/v1/assets", tags=["Assets"])
 
 
 @router.post("",response_model=AssetResponse)
@@ -46,3 +43,20 @@ async def get_asset(
         db,
         asset_id
     )
+
+
+# import assets from a list of AssetImportSchema
+@router.post("/import")
+async def import_assets(assets: List[AssetImportSchema], db: AsyncSession = Depends(get_db)):
+    try:
+        imported_count = 0
+        for asset_data in assets:
+            await AssetService.upsert_asset(db, asset_data)
+            imported_count += 1
+            
+        return {
+            "status": "success",
+            "message": f"Successfully processed and merged {imported_count} assets."
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

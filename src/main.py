@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from src.helper.config import get_settings
 from src.routes.data import router as asset_router
+from src.routes.nlpquery import router as nlp_router
 
 
 app = FastAPI(
@@ -30,3 +31,4 @@ async def shutdown_span():
     await app.db_engine.dispose()
 
 app.include_router(asset_router)
+app.include_router(nlp_router)

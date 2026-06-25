@@ -52,17 +52,17 @@ class Asset(SQLAlchemyBase):
 
 
 
-outgoing_relationships = relationship(
-    "AssetRelationship",
-    foreign_keys="AssetRelationship.source_asset_id",
-    back_populates="source_asset"
-)
+    outgoing_relationships = relationship(
+        "AssetRelationship",
+        foreign_keys="AssetRelationship.source_asset_id",
+        back_populates="source_asset"
+    )
 
-incoming_relationships = relationship(
-    "AssetRelationship",
-    foreign_keys="AssetRelationship.target_asset_id",
-    back_populates="target_asset"
-)
+    incoming_relationships = relationship(
+        "AssetRelationship",
+        foreign_keys="AssetRelationship.target_asset_id",
+        back_populates="target_asset"
+    )
 
 
 
