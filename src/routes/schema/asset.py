@@ -28,7 +28,7 @@ class AssetImportSchema(BaseModel):
     type: str
     value: str
     status: str
-    source: str
+    source: Optional[str] = None
     tags: Optional[List[str]] = []
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, alias="metadata")
     # حقول إضافية للعلاقات (اختيارية)

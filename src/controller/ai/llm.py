@@ -1,5 +1,5 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
-
+from src.controller.ai.open_ai_llm import get_sql_from_query
 from src.helper.config import Settings
 
 

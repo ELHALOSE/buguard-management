@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.model.database import get_db
 from src.controller.ai.query_chain import process_natural_language_query
 
-router = APIRouter(prefix="/api/v1/ai", tags=["AI Analysis"])
+router = APIRouter(prefix="/api/v1/query", tags=["NLPQuery"])
 
 class NLQueryRequest(BaseModel):
     question: str
@@ -13,8 +13,7 @@ class NLQueryRequest(BaseModel):
 @router.post("/query")
 async def ask_database(payload: NLQueryRequest, db: AsyncSession = Depends(get_db)):
     """
-    ميزة LangChain الأولى: الاستعلام عن الأصول باللغة الطبيعية.
-    مثال: "Show me all active domains"
+    EX: "Show me all active domains"
     """
     response = await process_natural_language_query(db, payload.question)
     

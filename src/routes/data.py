@@ -14,24 +14,24 @@ from src.model.AssetServiceLayer import AssetService
 router = APIRouter(prefix="/api/v1/assets", tags=["Assets"])
 
 
-@router.post("",response_model=AssetResponse)
-async def create_asset(
-    payload: AssetCreate,
-    db: AsyncSession = Depends(get_db)
-):
-    return await AssetService.create_asset(
-        db,
-        payload
-    )
+# @router.post("",response_model=AssetResponse)
+# async def create_asset(
+#     payload: AssetCreate,
+#     db: AsyncSession = Depends(get_db)
+# ):
+#     return await AssetService.upsert_asset(
+#         db,
+#         payload
+#     )
 
 
-@router.get("",response_model=list[AssetResponse])
-async def get_assets(
-    db: AsyncSession = Depends(get_db)
-):
-    return await AssetService.get_all_assets(
-        db
-    )
+# @router.get("",response_model=list[AssetResponse])
+# async def get_assets(
+#     db: AsyncSession = Depends(get_db)
+# ):
+#     return await AssetService.get_all_assets(
+#         db
+#     )
 
 
 @router.get("/{asset_id}",response_model=AssetResponse)
@@ -45,7 +45,7 @@ async def get_asset(
     )
 
 
-# import assets from a list of AssetImportSchema
+# it is a new endpoint to import assets from a list of AssetImportSchema
 @router.post("/import")
 async def import_assets(assets: List[AssetImportSchema], db: AsyncSession = Depends(get_db)):
     try:

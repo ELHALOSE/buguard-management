@@ -1,6 +1,10 @@
 SQL_PROMPT_TEMPLATE = """
 You are a PostgreSQL expert working on a cybersecurity Asset Management System.
 Given the following database schema, write a valid PostgreSQL SELECT query to answer the user's question.
+You are a SQL generator. 
+Use these specific values for the 'type' column: DOMAIN, SUBDOMAIN, SERVICE, CERTIFICATE.
+Use these specific values for the 'status' column: ACTIVE , STALE , ARCHIVED.
+Always use uppercase for the type value.
 
 Table: assets
 Columns:
@@ -19,4 +23,13 @@ CRITICAL RULES:
 3. Return ONLY the raw query, no markdown, no explanations.
 
 User Question: {question}
+"""
+
+
+
+RISK_PROMPT_TEMPLATE = """
+Analyze the following asset data and provide a risk assessment.
+Data: {asset_data}
+
+{format_instructions}
 """

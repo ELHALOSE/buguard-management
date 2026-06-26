@@ -1,12 +1,21 @@
 from .llm import llm
 from .parser import query_parser
-from .prompt import SQL_PROMPT_TEMPLATE
+from .prompt import SQL_PROMPT_TEMPLATE, RISK_PROMPT_TEMPLATE
 from langchain_core.prompts import PromptTemplate
 from sqlalchemy.ext.asyncio import AsyncSession
 import logging
 from sqlalchemy import text
+from langchain_core.output_parsers import PydanticOutputParser
+from src.controller.ai.schema import RiskAssessment
+
+parser = PydanticOutputParser(pydantic_object=RiskAssessment)
 
 sql_prompt = PromptTemplate.from_template(SQL_PROMPT_TEMPLATE)
+risk_prompt = PromptTemplate(
+    template=RISK_PROMPT_TEMPLATE,
+    input_variables=["asset_data"],
+    partial_variables={"format_instructions": parser.get_format_instructions()},
+)
 
 # دمج الـ Prompt مع نموذج Gemini
 sql_generation_chain = sql_prompt | llm 
@@ -37,3 +46,13 @@ async def process_natural_language_query(db: AsyncSession, user_question: str) -
     except Exception as e:
         logging.error(f"DB Execution Error: {str(e)}")
         return {"error": "Could not execute the query. Please rephrase your question."}
+    
+
+
+async def analyze_asset_risk(asset_data: dict) -> RiskAssessment:
+    # 1. إنشاء الـ Chain
+    chain = risk_prompt | llm | parser
+    
+    # 2. الاستدعاء
+    result = await chain.ainvoke({"asset_data": str(asset_data)})
+    return result

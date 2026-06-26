@@ -32,15 +32,14 @@ class AssetRelationship(SQLAlchemyBase):
     )
 
 
+    source_asset = relationship(
+            "Asset",
+            foreign_keys=[source_asset_id],
+            back_populates="outgoing_relationships" # مطابق للاسم في Asset
+        )
 
-source_asset = relationship(
-    "Asset",
-    foreign_keys=[source_asset_id],
-    back_populates="outgoing_relationships"
-)
-
-target_asset = relationship(
-    "Asset",
-    foreign_keys=[target_asset_id],
-    back_populates="incoming_relationships"
-)
+    target_asset = relationship(
+        "Asset",
+        foreign_keys=[target_asset_id],
+        back_populates="incoming_relationships" # مطابق للاسم في Asset
+    )
